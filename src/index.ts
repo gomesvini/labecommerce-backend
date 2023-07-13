@@ -1,5 +1,6 @@
 import  express, {Request, Response}  from 'express';
 import cors from 'cors';
+import { products, users } from './database';
 
 const app = express()
 
@@ -27,3 +28,6 @@ app.get("/ping", async (req: Request, res: Response) => {
         }
     }
 })
+
+console.table(users)
+console.table(products)
