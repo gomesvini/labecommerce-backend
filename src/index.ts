@@ -1,18 +1,17 @@
 import  express, {Request, Response}  from 'express';
 import cors from 'cors';
 import { db } from './knex';
-import { products, users } from './database';
 import { TProduct, TUser } from './types';
 
 
-const app = express()
+const app = express();
 
-app.use(cors()) //Libera o acesso externo para a aplicação
-app.use(express.json()) //Trabalha entrada e saída json automaticamente. Não precisa converter objetos e arrays para json e vice-versa
+app.use(cors()); //Libera o acesso externo para a aplicação
+app.use(express.json()); //Trabalha entrada e saída json automaticamente. Não precisa converter objetos e arrays para json e vice-versa
 
 app.listen(3003, () => {
     console.log(`Servidor rodando na porta ${3003}`)
-})
+});
 
 app.get("/ping", async (req: Request, res: Response) => {
     try {
@@ -30,7 +29,7 @@ app.get("/ping", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.post("/users", async(req: Request, res: Response) => {
     try {
@@ -74,7 +73,7 @@ app.post("/users", async(req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.get("/users", async (req: Request, res: Response) => {
     try {
@@ -101,7 +100,7 @@ app.get("/users", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.delete("/users/:id", async (req: Request, res: Response) => {
     try {
@@ -130,7 +129,7 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.post("/product", async (req: Request, res: Response) => {
     try {
@@ -168,7 +167,7 @@ app.post("/product", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.get("/product", async (req: Request, res:Response) => {
     try {
@@ -195,7 +194,7 @@ app.get("/product", async (req: Request, res:Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.delete("/products/:id", async (req: Request, res: Response) => {
     try {
@@ -224,7 +223,7 @@ app.delete("/products/:id", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
 
 app.put("/products/:id", async (req: Request, res: Response) => {
     try {
@@ -278,4 +277,4 @@ app.put("/products/:id", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
-})
+});
