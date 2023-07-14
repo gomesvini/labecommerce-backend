@@ -45,7 +45,7 @@ app.post("/users", async(req: Request, res: Response) => {
 
         await db("users").insert(newUser)
         res.status(201).send({
-            message: "Cadastro realizado com sucesso",
+            message: "Cadastro realizado com sucesso.",
             user: newUser
         })          
 
@@ -91,7 +91,7 @@ app.get("/users", async (req: Request, res: Response) => {
     }
 })
 
-app.post("/products", async (req: Request, res: Response) => {
+app.post("/product", async (req: Request, res: Response) => {
     try {
         const {id, name, price, description, imageUrl} = req.body
 
@@ -105,7 +105,7 @@ app.post("/products", async (req: Request, res: Response) => {
 
         await db("products").insert(newProducts)
         res.status(201).send({
-            message: "Produto criado com sucesso",
+            message: "Produto cadastrado com sucesso.",
             product: newProducts
         })
     } catch (error) {
@@ -123,7 +123,7 @@ app.post("/products", async (req: Request, res: Response) => {
     }
 })
 
-app.get("/products", async (req: Request, res:Response) => {
+app.get("/product", async (req: Request, res:Response) => {
     try {
         const searchProductsByName = req.query.q as string | undefined
 
