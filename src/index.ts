@@ -35,6 +35,18 @@ app.get("/ping", async (req: Request, res: Response) => {
 app.post("/users", async(req: Request, res: Response) => {
     try {
         const {id, name, email, password} = req.body
+        const [userIdAlreadyExists]: TUser[] | undefined[] = await db("users").where({id})
+        const [userEmailAlreadyExists]: TUser[] | undefined[] = await db("users").where({email})
+
+        if(userIdAlreadyExists){
+            res.status(400)
+            throw new Error ("'id' já existe")
+        }
+
+        if(userEmailAlreadyExists){
+            res.status(400)
+            throw new Error ("'email' já existe")
+        }
 
         const newUser = {
             id,
@@ -94,6 +106,12 @@ app.get("/users", async (req: Request, res: Response) => {
 app.delete("/users/:id", async (req: Request, res: Response) => {
     try {
         const idToDelete = req.params.id
+        const [userIdAlreadyExists] : TUser[] | undefined[] = await db("users").where({id: idToDelete})
+
+        if(!userIdAlreadyExists){
+            res.status(404)
+            throw new Error("'id' não encontrado")
+        }
 
         await db("users").del().where({id: idToDelete})
 
@@ -114,10 +132,15 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
     }
 })
 
-
 app.post("/product", async (req: Request, res: Response) => {
     try {
         const {id, name, price, description, imageUrl} = req.body
+        const [productIdAlreadyExists] : TProduct[] | undefined[] = await db("products").where({id})
+
+        if(productIdAlreadyExists){
+            res.status(400)
+            throw new Error("'id' já existe")
+        }
 
         const newProducts : TProduct = {
             id,
@@ -177,6 +200,12 @@ app.get("/product", async (req: Request, res:Response) => {
 app.delete("/products/:id", async (req: Request, res: Response) => {
     try {
         const idToDelete = req.params.id
+        const [productIdAlreadyExists] : TUser[] | undefined[] = await db("products").where({id: idToDelete})
+
+        if(!productIdAlreadyExists){
+            res.status(404)
+            throw new Error("'id' não encontrado.")
+        }
 
         await db("products").del().where({id: idToDelete})
 
@@ -206,6 +235,13 @@ app.put("/products/:id", async (req: Request, res: Response) => {
         const newPrice = req.body.price
         const newDescription = req.body.description
         const newImageUrl = req.body.imageUrl
+
+        const [productIdAlreadyExist] : TProduct[] | undefined[] = await db("products").where({id: idToEdit})
+        
+        if(!productIdAlreadyExist){
+            res.status(404)
+            throw new Error("'id' não encontrado")
+        }
 
         const  [ product ]: TProduct[] | undefined[] = await db("products").where({ id: idToEdit})
 
