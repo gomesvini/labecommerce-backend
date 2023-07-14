@@ -31,3 +31,4 @@ export const products : TProduct[] = [
         imageUrl: "https://picsum.photos/seed/Monitor/400"
     }
 ]
+

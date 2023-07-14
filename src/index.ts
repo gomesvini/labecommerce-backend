@@ -1,6 +1,9 @@
 import  express, {Request, Response}  from 'express';
 import cors from 'cors';
+import { db } from './knex';
 import { products, users } from './database';
+import { TProduct, TUser } from './types';
+import { Database } from 'sqlite3';
 
 const app = express()
 
@@ -29,5 +32,120 @@ app.get("/ping", async (req: Request, res: Response) => {
     }
 })
 
-console.table(users)
-console.table(products)
+app.post("/users", async(req: Request, res: Response) => {
+    try {
+        const {id, name, email, password} = req.body
+
+        const newUser = {
+            id,
+            name,
+            email,
+            password
+        }
+
+        await db("users").insert(newUser)
+        res.status(201).send({
+            message: "Cadastro realizado com sucesso",
+            user: newUser
+        })          
+
+    } catch (error) {
+        console.log(error)
+
+        if(req.statusCode === 200){
+            res.status(500)
+        }
+
+        if(error instanceof Error){
+            res.send(error.message)
+        }else{
+            res.send("Erro inesperado")
+        }
+    }
+})
+
+app.get("/users", async (req: Request, res: Response) => {
+    try {
+        const searchTerm = req.query.q as string | undefined
+
+        if(searchTerm === undefined){
+            const result = await db("users")
+            res.status(200).send(result)
+        }else{
+            const result = await db("users").where("name", "LIKE", `%${searchTerm}%`)
+            res.status(200).send(result)
+        }
+        
+    } catch (error) {
+        console.log(error)
+
+        if(req.statusCode === 200){
+            res.status(500)
+        }
+
+        if(error instanceof Error){
+            res.send(error.message)
+        }else{
+            res.send("Erro inesperado")
+        }
+    }
+})
+
+app.post("/products", async (req: Request, res: Response) => {
+    try {
+        const {id, name, price, description, imageUrl} = req.body
+
+        const newProducts : TProduct = {
+            id,
+            name,
+            price,
+            description,
+            imageUrl
+        }
+
+        await db("products").insert(newProducts)
+        res.status(201).send({
+            message: "Produto criado com sucesso",
+            product: newProducts
+        })
+    } catch (error) {
+        console.log(error)
+
+        if(req.statusCode === 200){
+            res.status(500)
+        }
+
+        if(error instanceof Error){
+            res.send(error.message)
+        }else{
+            res.send("Erro inesperado")
+        }
+    }
+})
+
+app.get("/products", async (req: Request, res:Response) => {
+    try {
+        const searchProductsByName = req.query.q as string | undefined
+
+        if(searchProductsByName === undefined){
+            const result = await db("products")
+            res.status(200).send(result)
+        }else{
+            const result = await db("products").where("name", "LIKE", `%${searchProductsByName}%`)
+            res.status(200).send(result)
+        }
+        
+    } catch (error) {
+        console.log(error)
+
+        if(req.statusCode === 200){
+            res.status(500)
+        }
+
+        if(error instanceof Error){
+            res.send(error.message)
+        }else{
+            res.send("Erro inesperado")
+        }
+    }
+})
